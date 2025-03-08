@@ -35,7 +35,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         # Check if user exists
         existing_user = db.get_user(user.id)
-        if not existing_user.data:
+        if not existing_user:
             # Create new user
             db.create_user(user.id, user.username or user.first_name)
             welcome_text = (
@@ -171,7 +171,7 @@ async def summary(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Show daily calorie summary."""
     try:
         user_id = update.effective_user.id
-        user = db.get_user(user_id).data
+        user = db.get_user(user_id)
         
         if not user:
             await update.message.reply_text(
@@ -187,8 +187,8 @@ async def summary(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         # Create summary message
         summary_text = "📊 Today's Calorie Summary\n\n"
         
-        if meals.data:
-            for meal in meals.data:
+        if meals:
+            for meal in meals:
                 summary_text += (
                     f"🍽 {meal['food_name']}: {meal['calories']:.1f} calories\n"
                 )
