@@ -290,8 +290,8 @@ async def toggle_reminders(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 def main() -> None:
     """Start the bot."""
-    # Create application
-    application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).build()
+    # Create application with drop_pending_updates=True to prevent multiple instance conflicts
+    application = Application.builder().token(os.getenv("TELEGRAM_BOT_TOKEN")).drop_pending_updates(True).build()
     
     # Create conversation handler for manual food logging
     conv_handler = ConversationHandler(
@@ -317,8 +317,8 @@ def main() -> None:
     scheduler = SchedulerService(application.bot)
     scheduler.start()
     
-    # Start the bot
-    application.run_polling()
+    # Start the bot with a higher poll interval to reduce API requests
+    application.run_polling(poll_interval=2.0)
 
 if __name__ == "__main__":
     main() 
